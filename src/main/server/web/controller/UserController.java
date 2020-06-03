@@ -26,11 +26,6 @@ public class UserController {
         UserService userService = new UserService();
         List<User> users = userService.getAllUsers();
         ModelAndView result = new ModelAndView("/users");
-//        if (locale != null && locale.equals("ru")) {
-//            result.addObject("title", "МАШИНЫ");
-//        } else {
-//            result.addObject("title", "CARS");
-//        }
         result.addObject("users", users);
         return result;
     }
@@ -45,11 +40,6 @@ public class UserController {
         }
         List<User> users = userService.getAllUsers();
         ModelAndView result = new ModelAndView("/users");
-//        if (locale != null && locale.equals("ru")) {
-//            result.addObject("title", "МАШИНЫ");
-//        } else {
-//            result.addObject("title", "CARS");
-//        }
         result.addObject("users", users);
         return result;
     }

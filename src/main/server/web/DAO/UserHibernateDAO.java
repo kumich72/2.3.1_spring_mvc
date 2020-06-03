@@ -68,7 +68,6 @@ public class UserHibernateDAO implements IUserDAO {
             if (user != null) {
                 Transaction transaction = session.beginTransaction();
                 user.setEmail(email);
-//                user.setName(name);
                 user.setPassword(password);
                 session.save(user);
                 transaction.commit();
