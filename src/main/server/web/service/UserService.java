@@ -1,10 +1,13 @@
 package web.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import web.DAO.IUserDAO;
-import web.DAO.UserDaoFactory;
+//import web.DAO.UserDaoFactory;
+import web.DAO.UserHibernateDAO;
 import web.exception.DBException;
 import web.model.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +15,8 @@ import java.util.List;
 public class UserService implements IUserService {
 
     private static UserService userService;
+    @Autowired
+    private UserHibernateDAO userHibernateDAO;
 
     public static UserService getInstance() {
         if (userService == null) {
@@ -21,9 +26,8 @@ public class UserService implements IUserService {
     }
 
     public User getUserById(Long id) {
-        IUserDAO userDAO = UserDaoFactory.CreateDao();
         try {
-            User user = userDAO.getUserById(id);
+            User user = userHibernateDAO.getUserById(id);
             return user;
         } catch (Exception e) {
             e.printStackTrace();
@@ -32,11 +36,12 @@ public class UserService implements IUserService {
     }
 
     public List<User> getAllUsers() {
-        IUserDAO userDAO = UserDaoFactory.CreateDao();
+//        IUserDAO userDAO = userHibernateDAO;
 
         List<User> users = new ArrayList<>();
         try {
-            users = userDAO.getAllUsers();
+            users = userHibernateDAO.getAllUsers();
+//            users = userDAO.getAllUsers();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,10 +49,8 @@ public class UserService implements IUserService {
     }
 
     public boolean deleteUser(Long id) throws DBException {
-        IUserDAO userDAO = UserDaoFactory.CreateDao();
-
         try {
-            if (userDAO.deleteUser(id)) {
+            if (userHibernateDAO.deleteUser(id)) {
                 return true;
             }
         } catch (Exception e) {
@@ -57,10 +60,8 @@ public class UserService implements IUserService {
     }
 
     public boolean addUser(User user) throws DBException {
-        IUserDAO userDAO = UserDaoFactory.CreateDao();
-
         try {
-            if (userDAO.addUser(user)) {
+            if (userHibernateDAO.addUser(user)) {
                 return true;
             } else {
                 return false;
@@ -71,10 +72,8 @@ public class UserService implements IUserService {
     }
 
     public boolean editUser(Long id, String name, String password, String email) throws DBException {
-        IUserDAO userDAO = UserDaoFactory.CreateDao();
-
         try {
-            if (userDAO.editUser(id, name, password, email)) {
+            if (userHibernateDAO.editUser(id, name, password, email)) {
                 return true;
             } else {
                 return false;
@@ -85,9 +84,8 @@ public class UserService implements IUserService {
     }
 
     public boolean userIsAdmin(String name, String password) throws DBException {
-        IUserDAO userDAO = UserDaoFactory.CreateDao();
         try {
-            if (userDAO.userIsAdmin(name, password)) {
+            if (userHibernateDAO.userIsAdmin(name, password)) {
                 return true;
             } else {
                 return false;
@@ -98,9 +96,8 @@ public class UserService implements IUserService {
     }
 
     public User getUserByNameAndPassword(String name, String password) {
-        IUserDAO userDAO = UserDaoFactory.CreateDao();
         try {
-            User user = userDAO.getUserByNameAndPassword(name, password);
+            User user = userHibernateDAO.getUserByNameAndPassword(name, password);
             return user;
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,9 +106,8 @@ public class UserService implements IUserService {
     }
 
     public boolean userIsAdmin(Long id) throws DBException {
-        IUserDAO userDAO = UserDaoFactory.CreateDao();
         try {
-            if (userDAO.userIsAdmin(id)) {
+            if (userHibernateDAO.userIsAdmin(id)) {
                 return true;
             } else {
                 return false;

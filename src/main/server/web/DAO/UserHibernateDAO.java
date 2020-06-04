@@ -1,5 +1,7 @@
 package web.DAO;
 
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import web.model.User;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -11,14 +13,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class UserHibernateDAO implements IUserDAO {
-    //    private Session session;
     private static SessionFactory sessionFactory;
     private Configuration configuration;
 
-//    public UserHibernateDAO(Session session) {
-//        this.session = session;
-//    }
+    public UserHibernateDAO() {
+        if (configuration == null) {
+            this.configuration = getConfiguration();
+        }
+        if (sessionFactory == null) {
+            sessionFactory = createSessionFactory();
+        }
+    }
 
     public UserHibernateDAO(Configuration configuration) {
         if (configuration != null) {
@@ -38,6 +45,17 @@ public class UserHibernateDAO implements IUserDAO {
     }
 
     private Configuration getConfiguration() {
+        Configuration configuration = new Configuration();
+        configuration.addAnnotatedClass(User.class);
+
+        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/db_example?useUnicode=true&serverTimezone=UTC&useSSL=true&verifyServerCertificate=false");
+        configuration.setProperty("hibernate.connection.username", "root");
+        configuration.setProperty("hibernate.connection.password", "root");
+        configuration.setProperty("hibernate.show_sql", "true");
+        //configuration.setProperty("hibernate.hbm2ddl.auto", "create");
+        configuration.setProperty("hibernate.hbm2ddl.auto", "validate");
         return configuration;
     }
 
@@ -203,11 +221,6 @@ public class UserHibernateDAO implements IUserDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
-    }
-
-    public boolean createTable() throws SQLException {
-
         return false;
     }
 }

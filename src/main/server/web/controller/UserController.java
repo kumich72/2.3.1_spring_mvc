@@ -18,14 +18,14 @@ import java.util.List;
 @RequestMapping("/")
 public class UserController {
     @Autowired
-    private UserService  userService ;
+    private UserService  userService;
 
     @RequestMapping(value = "users", method = RequestMethod.GET)
     @ResponseBody
-    public ModelAndView printUsers(@RequestParam(required = false) String locale) {
-        UserService userService = new UserService();
+    public ModelAndView printUsers() {
+//        UserService userService = new UserService();
         List<User> users = userService.getAllUsers();
-        ModelAndView result = new ModelAndView("/users");
+        ModelAndView result = new ModelAndView("users");
         result.addObject("users", users);
         return result;
     }
