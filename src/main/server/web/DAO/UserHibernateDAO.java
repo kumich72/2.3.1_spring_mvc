@@ -1,7 +1,8 @@
 package web.DAO;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+import web.config.HibernateConfig;
 import web.model.User;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -9,7 +10,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +17,14 @@ import java.util.List;
 public class UserHibernateDAO implements IUserDAO {
     private static SessionFactory sessionFactory;
     private Configuration configuration;
+//    @Autowired
+    private HibernateConfig hibernateConfig;
 
-    public UserHibernateDAO() {
-        if (configuration == null) {
-            this.configuration = getConfiguration();
+    @Autowired
+    public UserHibernateDAO (HibernateConfig hibernateConfig) {
+
+        if (hibernateConfig != null) {
+            this.hibernateConfig = hibernateConfig;
         }
         if (sessionFactory == null) {
             sessionFactory = createSessionFactory();
@@ -37,27 +41,27 @@ public class UserHibernateDAO implements IUserDAO {
     }
 
     private SessionFactory createSessionFactory() {
-        Configuration configuration = getConfiguration();
+        Configuration configuration = hibernateConfig.hibernateConfig().getConfiguration();
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
         builder.applySettings(configuration.getProperties());
         ServiceRegistry serviceRegistry = builder.build();
         return configuration.buildSessionFactory(serviceRegistry);
     }
 
-    private Configuration getConfiguration() {
-        Configuration configuration = new Configuration();
-        configuration.addAnnotatedClass(User.class);
-
-        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/db_example?useUnicode=true&serverTimezone=UTC&useSSL=true&verifyServerCertificate=false");
-        configuration.setProperty("hibernate.connection.username", "root");
-        configuration.setProperty("hibernate.connection.password", "root");
-        configuration.setProperty("hibernate.show_sql", "true");
-        //configuration.setProperty("hibernate.hbm2ddl.auto", "create");
-        configuration.setProperty("hibernate.hbm2ddl.auto", "validate");
-        return configuration;
-    }
+//    private Configuration getConfiguration() {
+//        Configuration configuration = new Configuration();
+//        configuration.addAnnotatedClass(User.class);
+//
+//        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+//        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+//        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/db_example?useUnicode=true&serverTimezone=UTC&useSSL=true&verifyServerCertificate=false");
+//        configuration.setProperty("hibernate.connection.username", "root");
+//        configuration.setProperty("hibernate.connection.password", "root");
+//        configuration.setProperty("hibernate.show_sql", "true");
+//        //configuration.setProperty("hibernate.hbm2ddl.auto", "create");
+//        configuration.setProperty("hibernate.hbm2ddl.auto", "validate");
+//        return configuration;
+//    }
 
     public boolean addUser(String name, String email, String password) {
         try {
